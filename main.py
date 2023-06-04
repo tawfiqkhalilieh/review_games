@@ -16,16 +16,31 @@ while True:
 driver: webdriver.Chrome = webdriver.Chrome()
 driver.maximize_window()
 
+driver.get("https://www.chess.com/login_and_go?returnUrl=https://www.chess.com/")
+driver.find_element(By.ID, "username").send_keys("saddsadadddsddda312222")
+driver.find_element(By.ID, "password").send_keys("saddsadadddsddda312222AA0")
+driver.find_element(By.ID, "toggle-password-visibility").click()
+
+input("Click Once you login")
+# https://www.chess.com/games/archive/thelolman2?gameOwner=other_game&gameTypes%5B0%5D=chess960&gameTypes%5B1%5D=daily&gameType=live&page=1
+
 for page in pages:
     lst: list = []
-    driver.get("https://www.chess.com/member/tawfiqqqqq")
-    time.sleep(5)
-    ids = driver.find_elements(By.CLASS_NAME, 'archived-games-link')
-    lst = [ str(id.get_attribute('href')).split("/")[-1] for id in ids]
+    driver.get(page)
+    time.sleep(10)
+    ids = driver.find_elements(By.CLASS_NAME, "archive-games-link")
+    lst = [str(id.get_attribute("href")).split("/")[-1].split("?")[0] for id in ids]
 
     game_ids.extend(lst)
 
 driver.quit()
 
+print(game_ids)
+
+game_ids = list(set(game_ids))
+
 for ch in game_ids:
-    review_game(ch)
+    try:
+        review_game(ch)
+    except Exception as e:
+        print(ch)
